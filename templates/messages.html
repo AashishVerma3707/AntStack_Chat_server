@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script crossorigin="anonymous"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <style>
+        .container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+
+<div id="display">
+
+    <div class="container">
+
+        {%for i in Required_message%}
+            <h4>{{i}}</h4>
+        {%endfor%}
+
+    </div>
+</div>
+
+<form action="{% url 'chat_app:send_message'%}" id="post-form" method="post">
+    {%csrf_token%}
+    <input id="body" name="body" type="text">
+    <input id="room_id" name="Id" type="hidden" value="{{Id}}">
+    <input type="submit" value="send">
+</form>
+
+
+
+<!--<code block>-->
+<script type="text/javascript">
+  $(document).on('submit','#post-form',function(e){
+    e.preventDefault();
+
+    $.ajax({
+      type:'POST',
+      url:'/send',
+      data:{
+          body:$('#body').val(),
+          Id:$('#room_id').val(),
+        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(data){
+         console.log(data)
+      }
+    });
+    document.getElementById('body').value = ''
+  });
+</script>
+<!--<end of code block>-->
+
+<!--this code block is inspired from - https://github.com/tomitokko/django-chat-app/blob/main/templates/room.html-->
+<!--To prevent our page from reloading or going to another page.-->
+
+
+</body>
+</html>
